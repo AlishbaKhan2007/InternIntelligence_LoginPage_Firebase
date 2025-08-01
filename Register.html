@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wildlife Photography - Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #343a40;
+            --accent-color: #28a745;
+            --error-color: #dc3545;
+            --success-color: #28a745;
+            --text-color-light: #e9ecef;
+            --text-color-dark: #ced4da;
+            --background-dark: linear-gradient(135deg, #0a1118, #0e1a24);
+            --card-background: rgba(18, 30, 42, 0.85);
+            --input-bg: rgba(255, 255, 255, 0.07);
+            --input-focus-bg: rgba(255, 255, 255, 0.12);
+            --button-gradient: linear-gradient(45deg, #007bff, #0056b3);
+            --button-hover-gradient: linear-gradient(45deg, #0056b3, #007bff);
+            --shadow-base: 0 10px 30px rgba(0, 0, 0, 0.7);
+            --shadow-deep: 0 25px 60px rgba(0, 0, 0, 0.9);
+            --shadow-inset-light: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+            --shadow-inset-deep: inset 0 2px 10px rgba(0, 0, 0, 0.8);
+            --glow-primary: 0 0 25px rgba(0, 123, 255, 0.8);
+            --border-transparent: 1px solid rgba(255, 255, 255, 0.1);
+            --border-active: 1px solid var(--primary-color);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: var(--background-dark);
+            color: var(--text-color-light);
+            perspective: 2000px;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .bg-sphere {
+            position: absolute;
+            background: radial-gradient(circle, rgba(0, 123, 255, 0.1), transparent 70%);
+            border-radius: 50%;
+            filter: blur(50px);
+            opacity: 0.08;
+            animation: bg-float 20s ease-in-out infinite alternate;
+            transform-style: preserve-3d;
+            will-change: transform, opacity;
+        }
+
+        .bg-sphere:nth-child(1) { width: 250px; height: 250px; top: 10%; left: 8%; animation-delay: 0s; }
+        .bg-sphere:nth-child(2) { width: 200px; height: 200px; bottom: 15%; right: 12%; animation-delay: 4s; background: radial-gradient(circle, rgba(40, 167, 69, 0.1), transparent 70%); }
+        .bg-sphere:nth-child(3) { width: 150px; height: 150px; top: 40%; right: 5%; animation-delay: 8s; }
+        .bg-sphere:nth-child(4) { width: 180px; height: 180px; bottom: 5%; left: 20%; animation-delay: 2s; background: radial-gradient(circle, rgba(255, 255, 255, 0.05), transparent 70%); }
+        .bg-sphere:nth-child(5) { width: 120px; height: 120px; top: 25%; left: 40%; animation-delay: 6s; }
+
+        @keyframes bg-float {
+            0% { transform: translate3d(0, 0, 0); opacity: 0.08; }
+            50% { transform: translate3d(30px, 40px, -30px); opacity: 0.12; }
+            100% { transform: translate3d(0, 0, 0); opacity: 0.08; }
+        }
+
+        .register-container {
+            background: var(--card-background);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-base), var(--shadow-inset-light);
+            width: 90%;
+            max-width: 950px;
+            margin: 2rem auto;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.8s ease;
+            backdrop-filter: blur(20px) saturate(200%);
+            border: var(--border-transparent);
+            will-change: transform, box-shadow;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .flip-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 500px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+
+        .register-container:hover .flip-container {
+            transform: rotateY(180deg);
+        }
+
+        .flip-front, .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-base);
+            transform-style: preserve-3d;
+        }
+
+        .flip-front {
+            background: url('https://images.unsplash.com/photo-1612024782955-49fae79e42bb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fHBhcnJvdHxlbnwwfHwwfHx8MA%3D%3D') center/cover no-repeat;
+            transform: rotateY(0deg);
+            z-index: 2;
+        }
+
+        .flip-back {
+            background: url('https://plus.unsplash.com/premium_photo-1724654643848-ab19f6ec1c79?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZG9scGhpbmVzfGVufDB8fDB8fHww') center/cover no-repeat;
+            transform: rotateY(180deg);
+            z-index: 1;
+        }
+
+        .register-form-content {
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .register-container.hovered {
+            box-shadow: var(--shadow-deep), var(--shadow-inset-deep), var(--glow-primary);
+            border-color: var(--primary-color);
+        }
+
+        .brand-heading {
+            margin: 0 0 1rem 0;
+            color: var(--text-color-light);
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+            letter-spacing: 1px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            transform: translateZ(40px);
+            font-family: 'Cambria', serif;
+            text-align: center;
+        }
+
+        .brand-subheading {
+            margin: 0 0 1.5rem 0;
+            color: var(--text-color-dark);
+            font-size: 1.1em;
+            line-height: 1.4;
+            transform: translateZ(30px);
+            font-weight: 300;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .brand-heading::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--primary-color);
+            margin: 0.8rem auto 1.2rem;
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+            transform: translateZ(20px);
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: translateZ(20px);
+        }
+
+        .input-group label {
+            display: block;
+            text-align: left;
+            margin-bottom: 0.5rem;
+            color: var(--text-color-dark);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 10px;
+            background: var(--input-bg);
+            color: var(--text-color-light);
+            font-size: 0.9rem;
+            outline: none;
+            box-shadow: var(--shadow-inset-light);
+            transition: all 0.3s ease;
+            border: var(--border-transparent);
+        }
+
+        .input-group input:focus {
+            background: var(--input-focus-bg);
+            box-shadow: var(--shadow-inset-deep), var(--glow-primary);
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            background: var(--button-gradient);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            width: 100%;
+            margin: 0.5rem 0 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: var(--button-hover-gradient);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), var(--glow-primary);
+        }
+
+        .links {
+            margin: 1.5rem 0 0 0;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .links a {
+            color: var(--text-color-dark);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .links a:hover {
+            color: var(--primary-color);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.8rem;
+            margin: 0.3rem 0 0 0;
+            text-align: left;
+            display: none;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            font-size: 0.9rem;
+            margin: 1rem 0 0 0;
+            text-align: center;
+            display: none;
+        }
+
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 70%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-color-dark);
+            cursor: pointer;
+            font-size: 0.7rem;
+            z-index: 10;
+        }
+
+        /* Responsive Adjustments */
+        @media (min-width: 1025px) {
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                overflow: hidden;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .register-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 25px;
+                max-width: 700px;
+                padding: 25px;
+            }
+
+            .flip-container, .flip-front, .flip-back {
+                height: 350px;
+            }
+
+            .brand-heading {
+                font-size: 2em;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .register-container {
+                grid-template-columns: 1fr;
+                padding: 25px;
+                width: 90%;
+                max-width: 450px;
+                gap: 25px;
+                margin: 40px auto;
+            }
+
+            .flip-container, .flip-front, .flip-back {
+                height: 250px;
+                width: 100%;
+                max-width: 350px;
+                margin: 0 auto;
+            }
+
+            .brand-heading {
+                margin-bottom: 1.2rem;
+                font-size: 2rem;
+            }
+            
+            .brand-subheading {
+                margin-bottom: 1.5rem;
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 15px;
+            }
+
+            .register-container {
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .brand-heading {
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+            
+            .brand-subheading {
+                margin-bottom: 1.2rem;
+            }
+
+            .flip-container, .flip-front, .flip-back {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            html {
+                font-size: 14px;
+            }
+
+            .register-container {
+                padding: 18px;
+                max-width: 320px;
+            }
+
+            .brand-heading {
+                font-size: 1.6rem;
+            }
+            
+            .brand-subheading {
+                font-size: 0.9em;
+            }
+
+            .flip-container, .flip-front, .flip-back {
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            html {
+                font-size: 13px;
+            }
+
+            .register-container {
+                padding: 15px;
+                max-width: 280px;
+            }
+
+            .flip-container, .flip-front, .flip-back {
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-sphere"></div>
+    <div class="bg-sphere"></div>
+    <div class="bg-sphere"></div>
+    <div class="bg-sphere"></div>
+    <div class="bg-sphere"></div>
+
+    <div class="register-container" id="registerContainer">
+        <div class="flip-container">
+            <div class="flip-front"></div>
+            <div class="flip-back"></div>
+        </div>
+
+        <div class="register-form-content">
+            <h2 class="brand-heading">Wildlife Photography</h2>
+            <p class="brand-subheading">Unlock a world of breathtaking wildlife photography by creating your free account today!</p>
+            
+            <form id="registerForm">
+                <div class="input-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" name="fullname" placeholder="Your full name" required minlength="3">
+                    <div id="fullnameError" class="error-message"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Your email address" required>
+                    <div id="emailError" class="error-message"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Your password" required minlength="6">
+                    <div id="passwordError" class="error-message"></div>
+                </div>
+                
+                <button type="submit" class="btn" id="registerBtn">
+                    <span id="btnText">Register</span>
+                    <div class="spinner" id="spinner"></div>
+                </button>
+                <div id="registerError" class="error-message"></div>
+                <div id="registerSuccess" class="success-message"></div>
+            </form>
+            
+            <div class="links">
+                Already have an account? <a href="index.html">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            updateProfile 
+        } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCFycw3PLLsY_7dGYP4achqgp3QUGwxfPA",
+            authDomain: "wildlife-photography-3d065.firebaseapp.com",
+            projectId: "wildlife-photography-3d065",
+            storageBucket: "wildlife-photography-3d065.firebasestorage.app",
+            messagingSenderId: "423360641726",
+            appId: "1:423360641726:web:4000f51735bc3c19c6fcef"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Password toggle functionality
+        window.togglePassword = function(fieldId) {
+            const field = document.getElementById(fieldId);
+            const toggle = field.nextElementSibling;
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                toggle.textContent = 'Hide';
+            } else {
+                field.type = 'password';
+                toggle.textContent = 'Show';
+            }
+        };
+
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+            
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Validate full name
+            const fullname = document.getElementById('fullname').value.trim();
+            if (!fullname) {
+                document.getElementById('fullnameError').textContent = 'Full name is required';
+                document.getElementById('fullnameError').style.display = 'block';
+                isValid = false;
+            } else if (fullname.length < 3) {
+                document.getElementById('fullnameError').textContent = 'Name must be at least 3 characters';
+                document.getElementById('fullnameError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate email
+            const email = document.getElementById('email').value.trim();
+            if (!email) {
+                document.getElementById('emailError').textContent = 'Email is required';
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address';
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password
+            const password = document.getElementById('password').value;
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Password is required';
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            } else if (password.length < 6) {
+                document.getElementById('passwordError').textContent = 'Password must be at least 6 characters';
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // Form submission handler
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Reset messages
+            document.getElementById('registerError').style.display = 'none';
+            document.getElementById('registerSuccess').style.display = 'none';
+            
+            // Validate form
+            if (!validateForm()) return;
+            
+            // Get form values
+            const fullname = document.getElementById('fullname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Update UI for loading state
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('spinner');
+            const registerBtn = document.getElementById('registerBtn');
+            
+            btnText.style.display = 'none';
+            spinner.style.display = 'block';
+            registerBtn.disabled = true;
+            
+            try {
+                // Create user with email and password
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Update user profile with display name
+                await updateProfile(user, {
+                    displayName: fullname
+                });
+                
+                // Show success message
+                document.getElementById('registerSuccess').textContent = 'Registration successful! Redirecting...';
+                document.getElementById('registerSuccess').style.display = 'block';
+                
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+                
+            } catch (error) {
+                console.error("Registration error:", error);
+                
+                // Handle specific error cases
+                let errorMessage = "An error occurred during registration. Please try again.";
+                
+                switch(error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = "This email is already registered. Please login or use a different email.";
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = "Please enter a valid email address.";
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = "Password should be at least 6 characters.";
+                        break;
+                    case 'auth/operation-not-allowed':
+                        errorMessage = "Email/password accounts are not enabled.";
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = "Network error. Please check your connection.";
+                        break;
+                }
+                
+                // Show error message
+                document.getElementById('registerError').textContent = errorMessage;
+                document.getElementById('registerError').style.display = 'block';
+                
+                // Reset button state
+                btnText.style.display = 'block';
+                spinner.style.display = 'none';
+                registerBtn.disabled = false;
+            }
+        });
+
+        // 3D hover effect
+        const registerContainer = document.getElementById('registerContainer');
+        
+        registerContainer.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            registerContainer.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        registerContainer.addEventListener('mouseenter', () => {
+            registerContainer.classList.add('hovered');
+        });
+
+        registerContainer.addEventListener('mouseleave', () => {
+            registerContainer.classList.remove('hovered');
+            registerContainer.style.transform = 'rotateY(0deg) rotateX(0deg)';
+        });
+    </script>
+</body>
+</html>
